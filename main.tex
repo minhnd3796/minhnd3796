@@ -1,0 +1,132 @@
+\documentclass{article}
+\usepackage[utf8]{inputenc}
+\usepackage{hyperref}
+
+\title{Master Thesis (draft)}
+\author{Duc Minh Nguyen}
+\date{October 2022}
+
+\begin{document}
+
+\maketitle
+
+\tableofcontents
+
+\section{Introduction}
+\subsection{Context and Motivation}
+\begin{itemize}
+    \item Context: Federated Learning allows collective training of ML models
+    without having the locally stored data to be transmitted to a central
+    server. Kernel of Central server can be monitored, observed and customised
+    without having to change the kernel with eBPF.
+    \item Motivation: Apply eBPF in network communication of FL.
+\end{itemize}
+
+\subsection{Problem Statement}
+Research results in FL have come only with multi-thread simulation and simple
+model architecture and data, even with no simulated network communication.
+Network communication of FL has large room to be explored, especially how to
+handle high burst traffic on server side. Implement a defence mechanism of FL
+as an in-network processing component of FL.
+
+\subsection{Goals and Contributions}
+\begin{itemize}
+    \item Goals: Setup a simulation of FL with network communication and
+    implement in-network processing component of FL.
+    \item Contributions: Show that such simulation is possible with minimal
+    overhead and sufficient to continue to explore the many directions of
+    validations and computations of FL, especially experiments for defence
+    mechanism of FL without having to build new FL framework or modify
+    well-engineered and sophisticated frameworks.
+\end{itemize}
+
+\subsection{Thesis Outline}
+
+\section{Background and Related Work}
+\subsection{Machine Learning and Federated Learning}
+\subsubsection{Machine Learning and Deep Learning}
+Here I write very shortly about what is ML and DL.
+\subsubsection{Distributed Machine Learning and Federated Learning}
+The same for distributed ML and FL.
+\subsubsection{Attacks against FL}
+List and introduce some poisoning attacks (targeted, untargeted), inflation
+attacks and sybil attacks.
+\subsubsection{Defence Mechanisms for FL}
+Short insight into some server-side and client-side defences, then lead the
+readers to FoolsGold as an application for the captured submitted models.
+\begin{itemize}
+    \item Trusted Executed Environment
+    Here I mention and introduce some of the client-side approaches similar to the
+    one from Benedikt V\"olker
+    \item FoolsGold
+    Describe the essentials of the algorithms and its reported performance,
+    point out my improvments and contributions based on the original paper.
+\end{itemize}
+
+\subsection{Distributed ML Framework}
+\subsubsection{Overview}
+General discussion on the landscape of FL framework, worth to mentioned:
+Tensorflow Federated by Google and then guide to NVFlare and why I used it for
+this network simulation.
+\subsubsection{Remote Procedure Call with gRPC and ProtoBuf}
+Introduction to RPC (distributed programming paradigm) in general and guide
+the readers to gRPC of Google and its data format ProtoBuf whose data is
+deserialised and transmitted on top of the DATA stream of HTTP/2 protocol.
+\subsubsection{NVFlare - The FL Framework with Network Communication}
+General introduction to system architecture of the NVIDIA Framework
+
+\subsection{Docker}
+\subsubsection{Docker container and its network stack}
+General to Docker container and present the necessity of Docker in terms of its
+private network and its Linux network stack when setting the network simulation.
+\subsubsection{FL Simulation with Docker}
+Why have to build Docker image myself for each type of machine (OS and CPU
+architecture) to ensure the kernel-version capability of self-compiled,
+otherwise, simulation for network communication of FL is not successful
+because all of them are python version and kernel version dependent.
+
+\subsection{eBPF}
+\subsubsection{eBPF in kernel-customisation}
+Arguments of utilisation of bcc with the raw socket in the experiment, although
+there are myriads of options for using eBPF (XDP, GoLang, etc.)
+\subsubsection{eBPF with Docker containers}
+Describe how the Linux kernel of Linux Docker containers can benefit from eBPF.
+
+\section{Design and Implementation}
+\subsection{Design}
+\subsubsection{Docker Image for the Simulation}
+Short description about how to build the correct image for simulation for any
+type of machines.
+\subsubsection{In-network Submitted Model Capturing}
+How to manually dissect the captured tcp packets to write kernel-side as well
+as user-space eBPF script to capture the model on-the-wire with the ebpf raw
+non-blocking socket.
+\subsubsection{In-network Server-side Training Validation}
+Describe how I incorporate FoolsGold to my simulation.
+
+\subsection{Implementation}
+\subsubsection{Kernel-space Script}
+How the kernel-space script implements the eBPF packet filter to capture the
+necessary packets on-the-wire in kernel space.
+\subsubsection{User-space Script}
+How the user-space Python script extract and deserialised the submitted model
+the captured HTTP2 payload.
+\subsubsection{Simplified FoolsGold}
+Why "Simplified" FoolsGold and how it is suitably incorporated to the simulation
+
+\section{Evaluation}
+\subsection{eBPF Overhead}
+Interpret the overhead of eBPF in various scenarios in which all submitted
+parameters are dumped to disk.
+
+\subsection{FoolsGold Performance}
+Interpret the validation capabilities of FoolsGold in detecting no
+malicious/sybil clients with different non-iid partitions of the FL simulation.
+
+\subsection{Discussion of Experimental Results}
+
+\section{Conclusion and Future Work}
+\subsection{Conclusion}
+\subsection{Future Work}
+
+\end{document}
